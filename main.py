@@ -1,8 +1,8 @@
 from src.get_vacancy import get_company, get_vacancies, get_vacancies_list
 from src.config import config
 from src.ulils import create_database, save_data_to_database
-import psycopg2
-
+from src.DB_class import DBManager
+from src.func import main_func
 
 if __name__ == '__main__':
     params = config()
@@ -11,3 +11,4 @@ if __name__ == '__main__':
     vacancies = get_vacancies_list(data)
     create_database("vacancy", params)
     save_data_to_database(vacancies, company_list, "vacancy", params)
+    main_func("vacancy", params)
