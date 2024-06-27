@@ -11,4 +11,4 @@ if __name__ == '__main__':
     vacancies = get_vacancies_list(data)
     create_database("vacancy", params)
     save_data_to_database(vacancies, company_list, "vacancy", params)
-     main_func("vacancy", params)
+    main_func("vacancy", params)
