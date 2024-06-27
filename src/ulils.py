@@ -12,27 +12,28 @@ def create_database(name, params):
     cur.execute(f"CREATE DATABASE {name}")
 
     conn.close()
+
     conn = psycopg2.connect(database=name, **params)
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS company (
+            CREATE TABLE company (
                 company_id INT PRIMARY KEY,
-                company_name VARCHAR(255) UNIQUE NOT NULL,
+                company_name VARCHAR,
                 company_url TEXT
             )
         """)
 
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE IF NOT EXISTS vacancies (
+            CREATE TABLE vacancies (
                 vacancies_id SERIAL PRIMARY KEY,
-                company_id INTEGER REFERENCES company(company_id) NOT NULL,
-                company_name VARCHAR(255) NOT NULL,
+                company_id INT REFERENCES company(company_id),
+                company_name VARCHAR,
                 job_title TEXT,
                 vacancy_url TEXT,
-                salary_from INTEGER,
-                salary_to INTEGER,
-                currency TEXT,
+                salary_from INTEGER DEFAULT NULL,
+                salary_to INTEGER DEFAULT NULL,
+                currency TEXT DEFAULT NULL,
                 description TEXT,
                 requirement TEXT
             )
@@ -42,24 +43,18 @@ def create_database(name, params):
     conn.close()
     return "База данных и таблицы успешно созданы."
 
-def save_data_to_database(data: list[dict[str, Any]], database, params: dict):
+def save_data_to_database(data: list[dict[str, Any]], data_company: list[dict[str, Any]], database, params: dict):
     """
     Сохранение данных о работодателях и вакансиях в базу данных
     """
     conn = psycopg2.connect(dbname=database, **params)
-    list_uni = []
-    for i in data:
-        if i in list_uni:
-            continue
-        else:
-            list_uni.append(i)
 
     with conn.cursor() as cur:
-        for company in list_uni:
+        for company in data_company:
             cur.execute("""
             INSERT INTO company (company_id, company_name, company_url)
             VALUES (%s, %s, %s)
-            """,(company['company_id'], company['company_name'], company['company_url']))
+            """,(company['id'], company['name'], company['url']))
         for company in data:
             cur.execute("""
             INSERT INTO vacancies (company_id, company_name, job_title, vacancy_url, salary_from,

@@ -1,5 +1,5 @@
 import psycopg2
-
+import requests
 
 class DBManager:
     def get_companies_and_vacancies_count():

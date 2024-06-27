@@ -6,8 +6,8 @@ import psycopg2
 
 if __name__ == '__main__':
     params = config()
-    data = get_vacancies(get_company())
+    company_list = get_company()
+    data = get_vacancies(company_list)
     vacancies = get_vacancies_list(data)
     create_database("vacancy", params)
-    save_data_to_database(vacancies, "vacancy", params)
-
+    save_data_to_database(vacancies, company_list, "vacancy", params)
