@@ -3,7 +3,9 @@ from typing import Any
 
 
 def create_database(name, params):
-    """ Создание базы данных и таблиц для сохранения данных о вакансиях и о работодателях"""
+    """
+    Создание базы данных и таблиц для сохранения данных о вакансиях и о работодателях
+    """
     conn = psycopg2.connect(dbname='postgres', **params)
     conn.autocommit = True
     cur = conn.cursor()
@@ -16,7 +18,7 @@ def create_database(name, params):
     conn = psycopg2.connect(database=name, **params)
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE company (
+            CREATE TABLE IF NOT EXISTS company (
                 company_id INT PRIMARY KEY,
                 company_name VARCHAR,
                 company_url TEXT
@@ -25,7 +27,7 @@ def create_database(name, params):
 
     with conn.cursor() as cur:
         cur.execute("""
-            CREATE TABLE vacancies (
+            CREATE TABLE IF NOT EXISTS vacancies (
                 vacancies_id SERIAL PRIMARY KEY,
                 company_id INT REFERENCES company(company_id),
                 company_name VARCHAR,
